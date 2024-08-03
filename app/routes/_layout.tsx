@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
 export default function Index() {
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full pb-20">
       <header
         className={twJoin(
           "border-b border-b-gray-200 flex justify-center h-16 items-center",

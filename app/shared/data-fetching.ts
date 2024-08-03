@@ -78,18 +78,27 @@ interface ReleasesResponse {
   nextCursor: string;
 }
 
-export async function getReleases() {
+interface Variables {
+  limit?: number;
+}
+
+export async function getReleases({ limit = 10 }: Variables = {}) {
+  const searchParams = new URLSearchParams({
+    limit: limit.toString(),
+  });
   const releaseResponse = await fetch(
-    `${process.env.API_BASE_URL}/core/rpc/records.listRecordsV2`
+    `${
+      process.env.API_BASE_URL
+    }/core/rpc/records.listRecordsV2?${searchParams.toString()}`
   );
   if (!releaseResponse.ok) {
     throw new Response("Failed to fetch releases", { status: 500 });
   }
   return (await releaseResponse.json()) as ReleasesResponse;
 }
-
 /**
  * TODO
  *
  * - add smaller items.publishedBy.identity.avatarUri size - loading massive image atm
+ * - is there an easy way to go back? (pagination) What id I wanted `< [page] >` UI?
  */

@@ -15,9 +15,11 @@
     "@remix-run/react": "^2.11.0",
     "@remix-run/serve": "^2.11.0",
     "isbot": "^4.1.0",
+    "lucide-react": "^0.424.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwind-merge": "^2.4.0"
+    "tailwind-merge": "^2.4.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.11.0",
