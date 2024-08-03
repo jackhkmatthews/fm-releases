@@ -80,10 +80,16 @@ interface ReleasesResponse {
 
 export async function getReleases() {
   const releaseResponse = await fetch(
-    `${process.env.RELEASE_API}/core/rpc/records.listRecordsV2`
+    `${process.env.API_BASE_URL}/core/rpc/records.listRecordsV2`
   );
   if (!releaseResponse.ok) {
     throw new Response("Failed to fetch releases", { status: 500 });
   }
   return (await releaseResponse.json()) as ReleasesResponse;
 }
+
+/**
+ * TODO
+ *
+ * - add smaller items.publishedBy.identity.avatarUri size - loading massive image atm
+ */

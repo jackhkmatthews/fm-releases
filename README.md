@@ -2,6 +2,10 @@
 
 - 📖 [Remix docs](https://remix.run/docs)
 
+## Environment Variables
+
+Make a copy of `.env.example` and rename it to `.env`. Fill in the values with your own.
+
 ## Development
 
 Run the dev server:

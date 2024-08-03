@@ -1,8 +1,8 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 import { twJoin } from "tailwind-merge";
-import { Star } from "~/common/icons/star";
-import { shellPaddingClasses } from "~/common/styles";
+import { Star } from "~/shared/star";
+import { shellPaddingClasses } from "~/shared/styles";
 
 export const meta: MetaFunction = () => {
   return [
