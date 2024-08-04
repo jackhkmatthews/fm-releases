@@ -107,7 +107,7 @@ export default function Index() {
         </div>
         <hr className="bg-gray-600" />
         <div className={cn(shellPaddingClasses)}>
-          <ul className="flex flex-col gap-6">
+          <ul className="flex flex-col gap-10">
             {loaderData.data.items.map((item) => (
               <Release key={item.id} item={item} />
             ))}
