@@ -1,12 +1,21 @@
 import { json, LoaderFunctionArgs, type MetaFunction } from "@remix-run/node";
-import { Form, useLoaderData, useLocation, useSubmit } from "@remix-run/react";
+import {
+  Form,
+  isRouteErrorResponse,
+  useLoaderData,
+  useLocation,
+  useRouteError,
+  useSubmit,
+} from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { twJoin } from "tailwind-merge";
 import { z } from "zod";
 import { getReleases } from "~/shared/data-fetching";
 import { FMRImage } from "~/shared/fmr-image";
-import { shellPaddingClasses } from "~/shared/styles";
+import { largeTextClasses, shellPaddingClasses } from "~/shared/styles";
 import { normalizeHttpsAndIpfs } from "~/shared/utils";
+import { Hero } from "./hero";
+import { Paginator } from "./paginator";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,20 +26,22 @@ export const meta: MetaFunction = () => {
 
 const ReleasesUrlSchema = z.object({
   limit: z.coerce.number().min(1).max(100),
+  cursor: z.string().optional(),
 });
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const params = url.searchParams;
   const limit = params.get("limit") ? params.get("limit")! : "10";
-  const result = ReleasesUrlSchema.safeParse({ limit });
+  const cursor = params.get("cursor") || undefined;
+  const result = ReleasesUrlSchema.safeParse({ limit, cursor });
   if (!result.success) {
-    throw new Response(`Invalid query parameters.`, {
+    throw new Response(`Invalid query parameters. ${result.error}`, {
       status: 400,
     });
   }
   const data = await getReleases(result.data);
-  return json({ data, limit });
+  return json({ data, limit, cursor });
 }
 
 export default function Index() {
@@ -47,41 +58,26 @@ export default function Index() {
 
   return (
     <div className="flex flex-col">
-      <div
-        className={twJoin(
-          shellPaddingClasses,
-          "bg-gray-950 flex flex-col py-10"
-        )}
-      >
-        <h1 className="w-full text-gray-50 font-sans leading-tight text-[max(1.875rem,8cqw)] translate-x-[-0.1ch]">
-          Fresh Meta Releases
-        </h1>
-        <p className="text-gray-300">
-          A curated selection of books, films, music and art. Released, promoted
-          and distributed by{" "}
-          <a
-            href="https://www.metalabel.com/"
-            className="underline"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Metalabel
-          </a>
-          .
-        </p>
-      </div>
+      <Hero />
       <div className="flex flex-col gap-4 mt-8 md:mt-12 lg:mt-16">
-        <h1
+        <h2
           className={twJoin(
             shellPaddingClasses,
-            "text-3xl w-full text-gray-900 md:text-4xl lg:text-6xl"
+            largeTextClasses,
+            "w-full text-gray-900"
           )}
         >
           Releases
-        </h1>
+        </h2>
         <hr className="bg-gray-600" />
-        <div className={twJoin("flex justify-between", shellPaddingClasses)}>
+        <div
+          className={twJoin(
+            "flex justify-between items-center flex-wrap",
+            shellPaddingClasses
+          )}
+        >
           <Form
+            className="py-1"
             onChange={(event) => {
               submit(event.currentTarget);
             }}
@@ -105,6 +101,10 @@ export default function Index() {
               </label>
             </div>
           </Form>
+          <Paginator
+            currentCursor={loaderData.cursor}
+            nextCursor={loaderData.data.nextCursor}
+          />
         </div>
         <hr className="bg-gray-600" />
         <div className={twJoin(shellPaddingClasses)}>
@@ -148,6 +148,20 @@ export default function Index() {
           </ul>
         </div>
       </div>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <div className={twJoin(shellPaddingClasses, "py-20 flex flex-col gap-2")}>
+      <h1 className={twJoin(largeTextClasses)}>
+        Oops! A {isRouteErrorResponse(error) ? "server" : "client"} error
+        occurred!
+      </h1>
+      {isRouteErrorResponse(error) && <p>{error.data}</p>}
+      {error instanceof Error && <p>{error.message}</p>}
     </div>
   );
 }

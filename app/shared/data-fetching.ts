@@ -80,12 +80,16 @@ interface ReleasesResponse {
 
 interface Variables {
   limit?: number;
+  cursor?: string;
 }
 
-export async function getReleases({ limit = 10 }: Variables = {}) {
+export async function getReleases({ limit = 10, cursor }: Variables = {}) {
   const searchParams = new URLSearchParams({
     limit: limit.toString(),
   });
+  if (cursor) {
+    searchParams.set("cursor", cursor);
+  }
   const releaseResponse = await fetch(
     `${
       process.env.API_BASE_URL
@@ -101,4 +105,5 @@ export async function getReleases({ limit = 10 }: Variables = {}) {
  *
  * - add smaller items.publishedBy.identity.avatarUri size - loading massive image atm
  * - is there an easy way to go back? (pagination) What id I wanted `< [page] >` UI?
+ *  - would be nice if returns currentCursor and maybe previousCursor?
  */
