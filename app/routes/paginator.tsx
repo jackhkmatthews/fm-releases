@@ -1,24 +1,17 @@
 import { Link, useLocation } from "@remix-run/react";
 import { ChevronFirst, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+
 import { updateSearchParams } from "~/shared/utils";
 
-export function Paginator({
-  currentCursor,
-  nextCursor,
-}: {
-  currentCursor?: string;
-  nextCursor?: string;
-}) {
+export function Paginator({ currentCursor, nextCursor }: { currentCursor?: string; nextCursor?: string }) {
   const location = useLocation();
-  const [previousCursors, setPreviousCursors] = useState<
-    Array<string | undefined>
-  >([]);
+  const [previousCursors, setPreviousCursors] = useState<Array<string | undefined>>([]);
 
   const previousCursor = previousCursors[previousCursors.length - 1];
 
   return (
-    <div className="flex flex-nowrap gap-2 items-center">
+    <div className="flex flex-nowrap items-center gap-2">
       {currentCursor ? (
         <Link
           className="p-1"
@@ -32,7 +25,7 @@ export function Paginator({
           <span className="sr-only">First page</span>
         </Link>
       ) : (
-        <p className="text-gray-300 p-1">
+        <p className="p-1 text-gray-300">
           <ChevronFirst />
         </p>
       )}
@@ -40,11 +33,7 @@ export function Paginator({
         <Link
           className="p-1"
           preventScrollReset
-          onClick={() =>
-            setPreviousCursors((previousCursors) =>
-              previousCursors.slice(0, -1)
-            )
-          }
+          onClick={() => setPreviousCursors(previousCursors => previousCursors.slice(0, -1))}
           to={`${location.pathname}?${updateSearchParams(location.search, {
             cursor: previousCursor,
           }).toString()}`}
@@ -53,7 +42,7 @@ export function Paginator({
           <span className="sr-only">Previous page</span>
         </Link>
       ) : (
-        <p className="text-gray-300 p-1">
+        <p className="p-1 text-gray-300">
           <ChevronLeft />
         </p>
       )}
@@ -61,12 +50,7 @@ export function Paginator({
         <Link
           className="p-1"
           preventScrollReset
-          onClick={() =>
-            setPreviousCursors((previousCursors) => [
-              ...previousCursors,
-              currentCursor,
-            ])
-          }
+          onClick={() => setPreviousCursors(previousCursors => [...previousCursors, currentCursor])}
           to={`${location.pathname}?${updateSearchParams(location.search, {
             cursor: nextCursor,
           }).toString()}`}
@@ -75,7 +59,7 @@ export function Paginator({
           <span className="sr-only">Next page</span>
         </Link>
       ) : (
-        <p className="text-gray-300 p-1">
+        <p className="p-1 text-gray-300">
           <ChevronRight />
         </p>
       )}

@@ -16,9 +16,7 @@ interface Variables {
 export async function getReleases(variables: Variables = {}) {
   const searchParams = constructSearchParams({ limit: 10, ...variables });
   const releaseResponse = await fetch(
-    `${
-      process.env.API_BASE_URL
-    }/core/rpc/records.listRecordsV2?${searchParams.toString()}`
+    `${process.env.API_BASE_URL}/core/rpc/records.listRecordsV2?${searchParams.toString()}`,
   );
   if (!releaseResponse.ok) {
     throw new Response("Failed to fetch releases", { status: 500 });

@@ -1,19 +1,13 @@
 import { IMAGE_BASE_URL } from "./constants";
 
-export function normalizeHttpsAndIpfs(
-  url: string,
-  baseUrl: string = IMAGE_BASE_URL
-) {
+export function normalizeHttpsAndIpfs(url: string, baseUrl: string = IMAGE_BASE_URL) {
   if (url.startsWith("ipfs://")) {
     return `${baseUrl}/${url.slice(7)}`;
   }
   return url;
 }
 
-export function updateSearchParams(
-  searchParams: string,
-  changes: Record<string, string | number | undefined>
-) {
+export function updateSearchParams(searchParams: string, changes: Record<string, string | number | undefined>) {
   const newSearchParams = new URLSearchParams(searchParams);
   for (const [key, value] of Object.entries(changes)) {
     if (value === undefined) {
@@ -29,9 +23,7 @@ export function getReleaseUrl(publisherHandle: string, releaseSlug: string) {
   return `https://${publisherHandle}.metalabel.com/${releaseSlug}`;
 }
 
-export function constructSearchParams(
-  params: Record<string, string | undefined | number>
-) {
+export function constructSearchParams(params: Record<string, string | undefined | number>) {
   const searchParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
