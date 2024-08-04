@@ -1,4 +1,4 @@
-import { Item, SortDirection } from "./types";
+import { Item, SortBy, SortDirection } from "./types";
 import { constructSearchParams } from "./utils";
 
 interface ReleasesResponse {
@@ -9,12 +9,12 @@ interface ReleasesResponse {
 interface Variables {
   limit?: number;
   cursor?: string;
-  sortBy?: string;
+  sortBy?: SortBy;
   sortDirection?: SortDirection;
 }
 
 export async function getReleases(variables: Variables = {}) {
-  const searchParams = constructSearchParams({ limit: 10, ...variables });
+  const searchParams = constructSearchParams({ limit: 10, sortBy: "lastPublishedAt", ...variables });
   const releaseResponse = await fetch(
     `${process.env.API_BASE_URL}/core/rpc/records.listRecordsV2?${searchParams.toString()}`,
   );

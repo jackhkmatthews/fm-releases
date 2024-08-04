@@ -14,9 +14,14 @@ export function Release({ item }: { item: Item }) {
           alt={item.publisher.identity.name}
           className="inline-block h-8 w-8 rounded-lg border border-gray-200 object-cover"
         />
-        <p className="break-words text-gray-600">
-          Published by <span className="text-black">{item.publisher.identity.name}</span>
-        </p>
+        <div className="flex flex-col">
+          <p className="break-words text-gray-600">
+            Published by <span className="text-black">{item.publisher.identity.name}</span>
+          </p>
+          <p className="text-sm text-gray-600">
+            <time dateTime={item.firstPublishedAt}>{new Date(item.firstPublishedAt).toISOString().split("T")[0]}</time>
+          </p>
+        </div>
       </div>
       <div className="flex flex-col gap-1">
         <h2 className="break-words text-2xl">{item.content.name}</h2>

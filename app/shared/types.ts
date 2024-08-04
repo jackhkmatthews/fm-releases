@@ -74,3 +74,5 @@ export interface Item {
 }
 
 export type SortDirection = "asc" | "desc";
+
+export type SortBy = "firstPublishedAt" | "lastPublishedAt" | "createdAt";
