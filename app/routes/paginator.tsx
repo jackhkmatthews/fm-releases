@@ -18,7 +18,7 @@ export function Paginator({
   const previousCursor = previousCursors[previousCursors.length - 1];
 
   return (
-    <div className="flex flex-nowrap gap-4 items-center">
+    <div className="flex flex-nowrap gap-2 items-center">
       {currentCursor ? (
         <Link
           className="p-1"

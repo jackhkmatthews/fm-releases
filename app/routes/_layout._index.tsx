@@ -95,8 +95,7 @@ export default function Index() {
                   <option value="20">20</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
-                </select>{" "}
-                releases
+                </select>
               </label>
             </div>
           </Form>
