@@ -11,11 +11,10 @@ import { useEffect, useRef } from "react";
 import { twJoin } from "tailwind-merge";
 import { z } from "zod";
 import { getReleases } from "~/shared/data-fetching";
-import { FMRImage } from "~/shared/fmr-image";
 import { largeTextClasses, shellPaddingClasses } from "~/shared/styles";
-import { getReleaseUrl, normalizeHttpsAndIpfs } from "~/shared/utils";
 import { Hero } from "./hero";
 import { Paginator } from "./paginator";
+import { Release } from "./release";
 
 export const meta: MetaFunction = () => {
   return [
@@ -110,52 +109,7 @@ export default function Index() {
         <div className={twJoin(shellPaddingClasses)}>
           <ul className="flex flex-col gap-6">
             {loaderData.data.items.map((item) => (
-              <li key={item.id} className="py-4 flex flex-col gap-3">
-                <a
-                  className="group/link"
-                  href={getReleaseUrl(
-                    item.publisher.identity.handle,
-                    item.releasedBy[0].slug
-                  )}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <div className="inline-flex items-center gap-2">
-                    <FMRImage
-                      height={100}
-                      src={normalizeHttpsAndIpfs(
-                        item.publisher.identity.avatarUri
-                      )}
-                      alt={item.publisher.identity.name}
-                      className="w-8 h-8 rounded-lg inline-block object-cover border border-gray-200"
-                    />
-                    <p className="text-gray-600 break-words ">
-                      Published by{" "}
-                      <span className="text-black">
-                        {item.publisher.identity.name}
-                      </span>
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl break-words group-hover/link:underline group-focus/link:text-gray-600">
-                      {item.content.name}
-                    </h2>
-                    <p className="flex flex-wrap gap-1">
-                      {item.recordTags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-gray-600 border border-gray-600 rounded-full px-2 text-sm inline-flex"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-                  <p className="text-gray-600 break-words">
-                    {item.content.description}
-                  </p>
-                </a>
-              </li>
+              <Release key={item.id} item={item} />
             ))}
           </ul>
         </div>
