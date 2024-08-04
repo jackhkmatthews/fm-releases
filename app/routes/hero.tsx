@@ -1,10 +1,10 @@
-import { twJoin } from "tailwind-merge";
+import { cn } from "~/lib/utils";
 import { shellPaddingClasses } from "~/shared/styles";
 
 export function Hero() {
   return (
     <div
-      className={twJoin(
+      className={cn(
         shellPaddingClasses,
         "bg-gray-950 flex flex-col pt-16 pb-10"
       )}

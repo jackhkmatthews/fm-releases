@@ -1,4 +1,5 @@
 import { Item } from "./types";
+import { constructSearchParams } from "./utils";
 
 interface ReleasesResponse {
   items: Item[];
@@ -8,15 +9,12 @@ interface ReleasesResponse {
 interface Variables {
   limit?: number;
   cursor?: string;
+  sortBy?: string;
+  sortDirection?: string;
 }
 
-export async function getReleases({ limit = 10, cursor }: Variables = {}) {
-  const searchParams = new URLSearchParams({
-    limit: limit.toString(),
-  });
-  if (cursor) {
-    searchParams.set("cursor", cursor);
-  }
+export async function getReleases(variables: Variables = {}) {
+  const searchParams = constructSearchParams({ limit: 10, ...variables });
   const releaseResponse = await fetch(
     `${
       process.env.API_BASE_URL

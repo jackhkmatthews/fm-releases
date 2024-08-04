@@ -8,13 +8,13 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import { useEffect, useRef } from "react";
-import { twJoin } from "tailwind-merge";
 import { z } from "zod";
 import { getReleases } from "~/shared/data-fetching";
 import { largeTextClasses, shellPaddingClasses } from "~/shared/styles";
 import { Hero } from "./hero";
 import { Paginator } from "./paginator";
 import { Release } from "./release";
+import { cn } from "~/lib/utils";
 
 export const meta: MetaFunction = () => {
   return [
@@ -60,7 +60,7 @@ export default function Index() {
       <Hero />
       <div className="flex flex-col gap-4 mt-8 md:mt-12 lg:mt-16">
         <h2
-          className={twJoin(
+          className={cn(
             shellPaddingClasses,
             largeTextClasses,
             "w-full text-gray-900"
@@ -70,7 +70,7 @@ export default function Index() {
         </h2>
         <hr className="bg-gray-600" />
         <div
-          className={twJoin(
+          className={cn(
             "flex justify-between items-center flex-wrap",
             shellPaddingClasses
           )}
@@ -78,6 +78,7 @@ export default function Index() {
           <Form
             className="py-1"
             onChange={(event) => {
+              // TODO(jack.matthews): should we also reset the cursors / pagination here?
               submit(event.currentTarget);
             }}
             action={location.pathname}
@@ -105,7 +106,7 @@ export default function Index() {
           />
         </div>
         <hr className="bg-gray-600" />
-        <div className={twJoin(shellPaddingClasses)}>
+        <div className={cn(shellPaddingClasses)}>
           <ul className="flex flex-col gap-6">
             {loaderData.data.items.map((item) => (
               <Release key={item.id} item={item} />
@@ -120,8 +121,8 @@ export default function Index() {
 export function ErrorBoundary() {
   const error = useRouteError();
   return (
-    <div className={twJoin(shellPaddingClasses, "py-20 flex flex-col gap-2")}>
-      <h1 className={twJoin(largeTextClasses)}>
+    <div className={cn(shellPaddingClasses, "py-20 flex flex-col gap-2")}>
+      <h1 className={cn(largeTextClasses)}>
         Oops! A {isRouteErrorResponse(error) ? "server" : "client"} error
         occurred!
       </h1>

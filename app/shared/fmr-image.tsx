@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { usePrevious } from "./use-previous";
+import { cn } from "~/lib/utils";
 
 export function FMRImage({
   className,
@@ -37,7 +37,7 @@ export function FMRImage({
       ref={imageRef}
       src={src}
       onLoad={onLoad}
-      className={twMerge(
+      className={cn(
         "transition-opacity",
         showImage ? "opacity-100" : "opacity-0",
         className

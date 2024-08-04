@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import { twJoin } from "tailwind-merge";
+import { cn } from "~/lib/utils";
 import { Star } from "~/shared/star";
 import { shellPaddingClasses } from "~/shared/styles";
 
@@ -14,7 +14,7 @@ export default function Index() {
   return (
     <div className="h-full w-full pb-20">
       <header
-        className={twJoin(
+        className={cn(
           "border-b border-b-gray-200 flex justify-center h-16 items-center",
           shellPaddingClasses
         )}

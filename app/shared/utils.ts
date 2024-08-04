@@ -28,3 +28,17 @@ export function updateSearchParams(
 export function getReleaseUrl(publisherHandle: string, releaseSlug: string) {
   return `https://${publisherHandle}.metalabel.com/${releaseSlug}`;
 }
+
+export function constructSearchParams(
+  params: Record<string, string | undefined | number>
+) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined) {
+      searchParams.append(key, value.toString());
+    }
+  });
+
+  return searchParams;
+}
