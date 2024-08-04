@@ -1,4 +1,4 @@
-# Welcome to JMR Releases!
+# Welcome to Fresh Meta Releases (FMR)!
 
 - 📖 [Remix docs](https://remix.run/docs)
 

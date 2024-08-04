@@ -6,8 +6,8 @@ import { shellPaddingClasses } from "~/shared/styles";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "JMR Recordings - Releases" },
-    { name: "description", content: "Current releases from JMR Recordings" },
+    { title: "FMR - Releases" },
+    { name: "description", content: "Fresh Metalabel releases" },
   ];
 };
 export default function Index() {
@@ -19,7 +19,10 @@ export default function Index() {
           shellPaddingClasses
         )}
       >
-        <Star className="text-gray-950 h-7 w-7" />
+        <p className="text-xl relative font-mono">
+          FMR
+          <Star className="text-gray-950 h-3 w-3 absolute top-0 right-0 translate-x-full" />
+        </p>
       </header>
       <main>
         <Outlet />

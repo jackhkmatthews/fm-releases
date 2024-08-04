@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { usePrevious } from "./use-previous";
 
-export function JMRImage({
+export function FMRImage({
   className,
   alt,
   src,
