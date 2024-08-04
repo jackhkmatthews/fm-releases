@@ -1,5 +1,5 @@
-import { cn } from "~/lib/utils";
 import { shellPaddingClasses } from "~/shared/styles";
+import { cn } from "~/shared/utils";
 
 export function Hero() {
   return (

@@ -72,3 +72,5 @@ export interface Item {
   isUnlisted: boolean;
   createdAt: string;
 }
+
+export type SortDirection = "asc" | "desc";

@@ -1,4 +1,4 @@
-import { Item } from "./types";
+import { Item, SortDirection } from "./types";
 import { constructSearchParams } from "./utils";
 
 interface ReleasesResponse {
@@ -10,7 +10,7 @@ interface Variables {
   limit?: number;
   cursor?: string;
   sortBy?: string;
-  sortDirection?: string;
+  sortDirection?: SortDirection;
 }
 
 export async function getReleases(variables: Variables = {}) {

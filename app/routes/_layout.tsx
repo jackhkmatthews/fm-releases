@@ -1,9 +1,9 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
-import { cn } from "~/lib/utils";
 import { Star } from "~/shared/star";
 import { shellPaddingClasses } from "~/shared/styles";
+import { cn } from "~/shared/utils";
 
 export const meta: MetaFunction = () => {
   return [{ title: "FMR - Releases" }, { name: "description", content: "Fresh Metalabel releases" }];

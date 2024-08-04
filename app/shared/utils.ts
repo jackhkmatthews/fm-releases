@@ -1,4 +1,11 @@
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 import { IMAGE_BASE_URL } from "./constants";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export function normalizeHttpsAndIpfs(url: string, baseUrl: string = IMAGE_BASE_URL) {
   if (url.startsWith("ipfs://")) {
