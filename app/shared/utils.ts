@@ -24,3 +24,7 @@ export function updateSearchParams(
   }
   return newSearchParams;
 }
+
+export function getReleaseUrl(publisherHandle: string, releaseSlug: string) {
+  return `https://${publisherHandle}.metalabel.com/${releaseSlug}`;
+}
