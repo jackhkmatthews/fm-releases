@@ -59,14 +59,14 @@ export default function Index() {
         <Sorter
           limit={loaderData.limit}
           sortDirection={loaderData.sortDirection}
-          onSortChange={event => submit(event.currentTarget)}
+          onSortChange={event => submit(event.currentTarget, { preventScrollReset: true })}
         />
         <hr className="bg-gray-600" />
         <Paginator
           currentCursor={loaderData.cursor}
           nextCursor={loaderData.data.nextCursor}
           limit={loaderData.limit}
-          onLimitChange={event => submit(event.currentTarget)}
+          onLimitChange={event => submit(event.currentTarget, { preventScrollReset: true })}
           sortDirection={loaderData.sortDirection}
         />
         <hr className="bg-gray-600" />
@@ -84,7 +84,7 @@ export default function Index() {
           nextCursor={loaderData.data.nextCursor}
           limit={loaderData.limit}
           sortDirection={loaderData.sortDirection}
-          onLimitChange={event => submit(event.currentTarget)}
+          onLimitChange={event => submit(event.currentTarget, { preventScrollReset: true })}
         />
         <hr className="bg-gray-600" />
       </div>
