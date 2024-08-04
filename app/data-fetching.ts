@@ -11,10 +11,16 @@ interface Variables {
   cursor?: string;
   sortBy?: SortBy;
   sortDirection?: SortDirection;
+  recordTagIn?: string;
 }
 
-export async function getReleases(variables: Variables = {}) {
-  const searchParams = constructSearchParams({ limit: 10, sortBy: "lastPublishedAt", ...variables });
+export async function getReleases({ recordTagIn, ...variables }: Variables = {}) {
+  const searchParams = constructSearchParams({
+    limit: 10,
+    sortBy: "lastPublishedAt",
+    recordTagIn: recordTagIn || undefined,
+    ...variables,
+  });
   const releaseResponse = await fetch(
     `${process.env.API_BASE_URL}/core/rpc/records.listRecordsV2?${searchParams.toString()}`,
   );

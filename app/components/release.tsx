@@ -1,8 +1,8 @@
 import { LinkIcon } from "lucide-react";
 
-import { FMRImage } from "~/shared/fmr-image";
-import { Item } from "~/shared/types";
-import { getReleaseUrl, normalizeHttpsAndIpfs } from "~/shared/utils";
+import { FMRImage } from "~/components/fmr-image";
+import { Item } from "~/types";
+import { getReleaseUrl, normalizeHttpsAndIpfs } from "~/utils";
 
 export function Release({ item }: { item: Item }) {
   return (
@@ -15,7 +15,7 @@ export function Release({ item }: { item: Item }) {
           className="inline-block h-8 w-8 rounded-lg border border-gray-200 object-cover"
         />
         <div className="flex flex-col">
-          <p className="break-words text-gray-600">
+          <p className="break-words break-all text-gray-600">
             Published by <span className="text-black">{item.publisher.identity.name}</span>
           </p>
           <p className="text-sm text-gray-600">
@@ -33,7 +33,7 @@ export function Release({ item }: { item: Item }) {
           ))}
         </p>
       </div>
-      <p className="break-words text-gray-600">{item.content.description}</p>
+      <p className="break-words break-all text-gray-600">{item.content.description}</p>
       <a
         className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-3 py-1 text-gray-200 hover:text-white"
         href={getReleaseUrl(item.publisher.identity.handle, item.releasedBy[0].slug)}

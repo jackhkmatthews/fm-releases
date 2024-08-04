@@ -1,9 +1,8 @@
 import { Form } from "@remix-run/react";
+import { RemixFormProps } from "@remix-run/react/dist/components";
 
-import { Select, SelectContent, SelectItem, SelectTrigger } from "~/shared/select";
-import { shellPaddingClasses } from "~/shared/styles";
-import { SortDirection } from "~/shared/types";
-import { cn } from "~/shared/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "~/components/select";
+import { SortDirection } from "~/types";
 
 const SORT_OPTIONS = [
   {
@@ -19,14 +18,13 @@ const SORT_OPTIONS = [
 export function Sorter({
   onSortChange,
   sortDirection,
-  limit,
+  ...rest
 }: {
   sortDirection?: SortDirection;
-  limit: string;
   onSortChange: React.FormEventHandler<HTMLFormElement>;
-}) {
+} & RemixFormProps) {
   return (
-    <Form className={cn(shellPaddingClasses)} onChange={onSortChange}>
+    <Form onChange={onSortChange} {...rest}>
       <label htmlFor="sortDirection">
         <span className="sr-only">Sort by:</span>
         <Select name="sortDirection" defaultValue={sortDirection}>
@@ -42,7 +40,6 @@ export function Sorter({
           </SelectContent>
         </Select>
       </label>
-      <input name="limit" type="hidden" value={limit} />
     </Form>
   );
 }

@@ -14,8 +14,11 @@ export function normalizeHttpsAndIpfs(url: string, baseUrl: string = IMAGE_BASE_
   return url;
 }
 
-export function updateSearchParams(searchParams: string, changes: Record<string, string | number | undefined>) {
-  const newSearchParams = new URLSearchParams(searchParams);
+export function updateSearchParams(
+  searchParams: string | URLSearchParams,
+  changes: Record<string, string | number | undefined>,
+) {
+  const newSearchParams = typeof searchParams === "string" ? new URLSearchParams(searchParams) : searchParams;
   for (const [key, value] of Object.entries(changes)) {
     if (value === undefined) {
       newSearchParams.delete(key);

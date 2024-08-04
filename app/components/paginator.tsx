@@ -1,11 +1,11 @@
 import { Form, Link, useLocation } from "@remix-run/react";
 import { ChevronFirst, ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useState } from "react";
+import { HTMLAttributes, useEffect, useState } from "react";
 
-import { Select, SelectContent, SelectItem, SelectTrigger } from "~/shared/select";
-import { shellPaddingClasses } from "~/shared/styles";
-import { SortDirection } from "~/shared/types";
-import { cn, updateSearchParams } from "~/shared/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "~/components/select";
+import { shellPaddingClasses } from "~/styles";
+import { SortDirection } from "~/types";
+import { cn, updateSearchParams } from "~/utils";
 
 const OPTIONS = [
   {
@@ -33,6 +33,8 @@ export function Paginator({
   limit,
   preventScrollReset = true,
   sortDirection,
+  className,
+  ...rest
 }: {
   currentCursor?: string;
   nextCursor?: string;
@@ -40,7 +42,7 @@ export function Paginator({
   onLimitChange: React.FormEventHandler<HTMLFormElement>;
   preventScrollReset?: boolean;
   sortDirection?: SortDirection;
-}) {
+} & HTMLAttributes<HTMLDivElement>) {
   const location = useLocation();
   const [previousCursors, setPreviousCursors] = useState<Array<string | undefined>>([]);
   const [selectLimit, setSelectLimit] = useState(limit);
@@ -55,7 +57,7 @@ export function Paginator({
   const previousCursor = previousCursors[previousCursors.length - 1];
 
   return (
-    <div className={cn("flex flex-wrap items-center justify-between", shellPaddingClasses)}>
+    <div className={cn("flex flex-wrap items-center justify-between gap-2", shellPaddingClasses, className)} {...rest}>
       <Form onChange={onLimitChange}>
         <label htmlFor="limit">
           <span className="sr-only">Releases per page:</span>

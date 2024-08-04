@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
-import { cn } from "~/shared/utils";
+import { cn } from "~/utils";
 
-import { usePrevious } from "./use-previous";
+import { usePrevious } from "../use-previous";
 
 export function FMRImage({ className, alt, src, ...imgProps }: React.ImgHTMLAttributes<HTMLImageElement>) {
   const [isClientSide, setIsClientSide] = useState(false);

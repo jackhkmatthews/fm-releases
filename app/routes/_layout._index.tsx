@@ -1,16 +1,25 @@
 import { LoaderFunctionArgs, type MetaFunction, json } from "@remix-run/node";
-import { isRouteErrorResponse, useLoaderData, useRouteError, useSubmit } from "@remix-run/react";
+import {
+  Link,
+  isRouteErrorResponse,
+  useLoaderData,
+  useLocation,
+  useRouteError,
+  useSearchParams,
+  useSubmit,
+} from "@remix-run/react";
+import { Plus } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { z } from "zod";
 
-import { getReleases } from "~/shared/data-fetching";
-import { largeTextClasses, shellPaddingClasses } from "~/shared/styles";
-import { cn } from "~/shared/utils";
-
-import { Hero } from "./hero";
-import { Paginator } from "./paginator";
-import { Release } from "./release";
-import { Sorter } from "./sorter";
+import { Hero } from "~/components/hero";
+import { Paginator } from "~/components/paginator";
+import { Release } from "~/components/release";
+import { Sorter } from "~/components/sorter";
+import { TAGS } from "~/constants";
+import { getReleases } from "~/data-fetching";
+import { largeTextClasses, noScrollBar, queryCTAClasses, shellPaddingClasses } from "~/styles";
+import { cn, updateSearchParams } from "~/utils";
 
 export const meta: MetaFunction = () => {
   return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" }];
@@ -20,15 +29,18 @@ const ReleasesUrlSchema = z.object({
   limit: z.coerce.number().min(1).max(100).optional(),
   cursor: z.string().optional(),
   sortDirection: z.union([z.literal("asc"), z.literal("desc")]).optional(),
+  recordTagIn: z.string().optional(),
 });
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const params = url.searchParams;
+  const tags = params.getAll("tag");
   const result = ReleasesUrlSchema.safeParse({
     limit: params.get("limit") || "10",
     cursor: params.get("cursor") || undefined,
     sortDirection: params.get("sortDirection") || "desc",
+    recordTagIn: tags.join(","),
   });
   if (!result.success) {
     throw new Response(`Invalid query parameters. ${result.error}`, {
@@ -42,7 +54,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Index() {
   const loaderData = useLoaderData<typeof loader>();
   const submit = useSubmit();
+  const [, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const limitInputRef = useRef<HTMLSelectElement>(null);
+  const tags = (loaderData.recordTagIn?.split(",") || []).map(tag => TAGS.find(t => t.value === tag)!).filter(Boolean);
 
   useEffect(() => {
     if (limitInputRef.current) {
@@ -53,32 +68,61 @@ export default function Index() {
   return (
     <div className="flex flex-col">
       <Hero />
-      <div className="mt-8 flex flex-col gap-4 md:mt-12 lg:mt-16">
-        <h2 className={cn(shellPaddingClasses, largeTextClasses, "w-full text-gray-900")}>Releases</h2>
-        <hr className="bg-gray-600" />
-        <Sorter
-          limit={loaderData.limit}
-          sortDirection={loaderData.sortDirection}
-          onSortChange={event => submit(event.currentTarget, { preventScrollReset: true })}
-        />
-        <hr className="bg-gray-600" />
+      <div className="mt-8 flex flex-col md:mt-12 lg:mt-16">
+        <h2 className={cn(shellPaddingClasses, largeTextClasses, "w-full border-b border-gray-300 pb-4 text-gray-900")}>
+          Releases
+        </h2>
+        <div
+          className={cn(
+            "flex items-center justify-start gap-2 overflow-x-scroll border-b border-gray-300 py-2",
+            shellPaddingClasses,
+            noScrollBar,
+          )}
+        >
+          <Sorter
+            className="flex-shrink-0"
+            sortDirection={loaderData.sortDirection}
+            onSortChange={event => {
+              const formData = new FormData(event.currentTarget);
+              setSearchParams(searchParams => {
+                searchParams.set("sortDirection", formData.get("sortDirection") as string);
+                return searchParams;
+              });
+            }}
+          />
+
+          {tags.length > 0 &&
+            tags.map(tag => (
+              <p key={tag.value} className={cn(queryCTAClasses, "pr-2")}>
+                <span>{tag.label}</span>
+              </p>
+            ))}
+          <Link
+            to={{ search: updateSearchParams(location.search, { filterMenu: "open" }).toString() }}
+            preventScrollReset
+            className={cn(queryCTAClasses, "flex-shrink-0")}
+          >
+            Update filters
+            <Plus className="h-4 w-4 opacity-50" />
+          </Link>
+        </div>
         <Paginator
+          className="border-b border-gray-300 py-2"
           currentCursor={loaderData.cursor}
           nextCursor={loaderData.data.nextCursor}
           limit={loaderData.limit}
           onLimitChange={event => submit(event.currentTarget, { preventScrollReset: true })}
           sortDirection={loaderData.sortDirection}
         />
-        <hr className="bg-gray-600" />
-        <div className={cn(shellPaddingClasses)}>
+        <div className={cn(shellPaddingClasses, "border-b border-gray-300 py-4")}>
           <ul className="flex flex-col gap-10">
             {loaderData.data.items.map(item => (
               <Release key={item.id} item={item} />
             ))}
           </ul>
         </div>
-        <hr className="bg-gray-600" />
         <Paginator
+          className="border-b border-gray-300 py-4"
           preventScrollReset={false}
           currentCursor={loaderData.cursor}
           nextCursor={loaderData.data.nextCursor}
@@ -86,7 +130,6 @@ export default function Index() {
           sortDirection={loaderData.sortDirection}
           onLimitChange={event => submit(event.currentTarget, { preventScrollReset: true })}
         />
-        <hr className="bg-gray-600" />
       </div>
     </div>
   );
