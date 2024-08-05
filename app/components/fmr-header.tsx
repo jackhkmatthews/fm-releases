@@ -1,13 +1,9 @@
-import type { MetaFunction } from "@remix-run/node";
 import { HTMLAttributes } from "react";
 
 import { Star } from "~/components/star";
 import { shellPaddingClasses } from "~/styles";
 import { cn } from "~/utils";
 
-export const meta: MetaFunction = () => {
-  return [{ title: "FMR - Releases" }, { name: "description", content: "Fresh Metalabel releases" }];
-};
 export default function FMRHeader({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <header

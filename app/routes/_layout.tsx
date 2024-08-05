@@ -7,7 +7,7 @@ import FMRHeader from "~/components/fmr-header";
 import { cn } from "~/utils";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "FMR - Releases" }, { name: "description", content: "Fresh Metalabel releases" }];
+  return [{ title: "FM Releases" }, { name: "description", content: "Fresh Metalabel Releases" }];
 };
 export default function Index() {
   const location = useLocation();

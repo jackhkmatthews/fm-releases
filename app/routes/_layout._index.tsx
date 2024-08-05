@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, type MetaFunction, json } from "@remix-run/node";
+import { LoaderFunctionArgs, json } from "@remix-run/node";
 import { Link, isRouteErrorResponse, useLoaderData, useRouteError, useSearchParams, useSubmit } from "@remix-run/react";
 import { Plus } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -11,10 +11,6 @@ import { Sorter } from "~/components/sorter";
 import { getReleases } from "~/data-fetching";
 import { largeTextClasses, noScrollBar, queryCTAClasses, shellPaddingClasses } from "~/styles";
 import { cn, getCheckedTags } from "~/utils";
-
-export const meta: MetaFunction = () => {
-  return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" }];
-};
 
 const ReleasesUrlSchema = z.object({
   limit: z.coerce.number().min(1).max(100).optional(),
