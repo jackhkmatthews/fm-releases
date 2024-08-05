@@ -1,5 +1,13 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { Link, isRouteErrorResponse, useLoaderData, useRouteError, useSearchParams, useSubmit } from "@remix-run/react";
+import {
+  Link,
+  isRouteErrorResponse,
+  useLoaderData,
+  useNavigation,
+  useRouteError,
+  useSearchParams,
+  useSubmit,
+} from "@remix-run/react";
 import { Plus } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { z } from "zod";
@@ -9,7 +17,7 @@ import { Paginator } from "~/components/paginator";
 import { Release } from "~/components/release";
 import { Sorter } from "~/components/sorter";
 import { getReleases } from "~/data-fetching";
-import { largeTextClasses, noScrollBar, queryCTAClasses, shellPaddingClasses } from "~/styles";
+import { CTAClasses, largeTextClasses, noScrollBar, shellPaddingClasses } from "~/styles";
 import { cn, getCheckedTags } from "~/utils";
 
 const ReleasesUrlSchema = z.object({
@@ -40,6 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Index() {
   const loaderData = useLoaderData<typeof loader>();
+  const navigation = useNavigation();
   const [searchParams] = useSearchParams();
   const limitInputRef = useRef<HTMLSelectElement>(null);
   const submit = useSubmit();
@@ -75,43 +84,40 @@ export default function Index() {
 
           {checkedTags.length > 0 &&
             checkedTags.map(tag => (
-              <p key={tag.value} className={cn(queryCTAClasses, "pr-2")}>
+              <p key={tag.value} className={cn(CTAClasses, "bg-gray-50 px-2")}>
                 <span>{tag.label}</span>
               </p>
             ))}
           <Link
             to={{ hash: "#filter-menu-open", search: searchParams.toString() }}
             preventScrollReset
-            className={cn(queryCTAClasses, "flex-shrink-0")}
+            className={cn(CTAClasses, "flex-shrink-0 pl-2")}
           >
             Update filters
             <Plus className="h-4 w-4 opacity-50" />
           </Link>
         </div>
         <Paginator
-          className="border-b border-gray-300 py-2"
+          className="border-b border-gray-300"
           currentCursor={loaderData.cursor}
           nextCursor={loaderData.data.nextCursor}
           limit={loaderData.limit}
         />
-        <div className={cn(shellPaddingClasses, "border-b border-gray-300 py-4 lg:py-10")}>
-          {loaderData.data.items.length > 0 ? (
-            <ul className="flex flex-col gap-10 lg:gap-20">
-              {loaderData.data.items.map(item => (
-                <Release key={item.id} item={item} />
-              ))}
-            </ul>
-          ) : (
-            <p className="py-10">
-              Oh no!
-              <br />
-              <br />
-              No releases match these filters. Update your filters to see some releases.
-            </p>
+        <div
+          className={cn(
+            shellPaddingClasses,
+            "border-b border-gray-300 py-4 lg:py-10",
+            navigation.state === "loading" && "animate-pulse",
           )}
+        >
+          <ul className="flex flex-col gap-10 lg:gap-20">
+            {loaderData.data.items.map(item => (
+              <Release key={item.id} item={item} />
+            ))}
+          </ul>
         </div>
         <Paginator
-          className="border-b border-gray-300 py-4"
+          className="border-b border-gray-300"
           preventScrollReset={false}
           currentCursor={loaderData.cursor}
           nextCursor={loaderData.data.nextCursor}

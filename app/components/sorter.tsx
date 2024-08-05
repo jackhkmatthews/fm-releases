@@ -47,6 +47,7 @@ export function Sorter({
       </label>
       {[...searchParams.entries()]
         .filter(([key]) => key !== "sortDirection")
+        .filter(([key]) => key !== "cursor")
         .map(([key, value]) => (
           <input key={`${key}:${value}`} type="hidden" name={key} value={value} />
         ))}

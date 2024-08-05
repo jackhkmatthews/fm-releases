@@ -1,8 +1,10 @@
 import { LinkIcon } from "lucide-react";
 
 import { FMRImage } from "~/components/fmr-image";
+import { TAGS } from "~/constants";
+import { CTAClasses } from "~/styles";
 import { Item } from "~/types";
-import { getReleaseUrl, normalizeHttpsAndIpfs } from "~/utils";
+import { cn, getReleaseUrl, normalizeHttpsAndIpfs } from "~/utils";
 
 export function Release({ item }: { item: Item }) {
   return (
@@ -27,8 +29,8 @@ export function Release({ item }: { item: Item }) {
         <h2 className="break-normal text-2xl [overflow-wrap:anywhere]">{item.content.name}</h2>
         <p className="flex flex-wrap gap-1">
           {item.recordTags.map(tag => (
-            <span key={tag} className="inline-flex rounded-full border border-gray-600 px-2 text-sm text-gray-600">
-              {tag}
+            <span key={tag} className={cn(CTAClasses, "bg-gray-50 px-2")}>
+              {TAGS.find(t => t.value === tag)?.label}
             </span>
           ))}
         </p>

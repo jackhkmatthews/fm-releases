@@ -2,6 +2,7 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import * as React from "react";
 
+import { CTAClasses } from "~/styles";
 import { cn } from "~/utils";
 
 const Select = SelectPrimitive.Root;
@@ -16,10 +17,7 @@ const SelectTrigger = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
-    className={cn(
-      "flex items-center justify-between gap-1 rounded-full border border-input bg-background py-1 pl-2 pr-1 text-sm ring-offset-background placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-      className,
-    )}
+    className={cn(CTAClasses, "pl-2 pr-1 placeholder:text-muted-foreground [&>span]:line-clamp-1", className)}
     {...props}
   >
     {children}

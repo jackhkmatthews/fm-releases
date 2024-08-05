@@ -3,7 +3,7 @@ import { ChevronFirst, ChevronLeft, ChevronRight } from "lucide-react";
 import { HTMLAttributes, useEffect, useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "~/components/select";
-import { shellPaddingClasses } from "~/styles";
+import { CTAClasses, shellPaddingClasses } from "~/styles";
 import { cn, updateSearchParams } from "~/utils";
 
 const OPTIONS = [
@@ -53,7 +53,10 @@ export function Paginator({
   const previousCursor = previousCursors[previousCursors.length - 1];
 
   return (
-    <div className={cn("flex flex-wrap items-center justify-between gap-2", shellPaddingClasses, className)} {...rest}>
+    <div
+      className={cn("flex flex-wrap items-center justify-between gap-2 py-2", shellPaddingClasses, className)}
+      {...rest}
+    >
       <Form
         preventScrollReset={preventScrollReset}
         onChange={event => {
@@ -75,6 +78,7 @@ export function Paginator({
         </label>
         {[...searchParams.entries()]
           .filter(([key]) => key !== "limit")
+          .filter(([key]) => key !== "cursor")
           .map(([key, value]) => (
             <input key={`${key}:${value}`} type="hidden" name={key} value={value} />
           ))}
@@ -82,47 +86,47 @@ export function Paginator({
       <div className="flex flex-nowrap items-center gap-2">
         {currentCursor ? (
           <Link
-            className="p-1"
+            className={cn(CTAClasses)}
             preventScrollReset={preventScrollReset}
             onClick={() => setPreviousCursors([])}
             to={{ search: updateSearchParams(searchParams, { cursor: undefined }).toString() }}
           >
-            <ChevronFirst />
+            <ChevronFirst className="h-4 w-4" />
             <span className="sr-only">First page</span>
           </Link>
         ) : (
-          <p className="p-1 text-gray-300">
-            <ChevronFirst />
+          <p className={cn(CTAClasses, "text-gray-300")}>
+            <ChevronFirst className="h-4 w-4" />
           </p>
         )}
         {currentCursor && previousCursors.length > 0 ? (
           <Link
-            className="p-1"
+            className={cn(CTAClasses)}
             preventScrollReset={preventScrollReset}
             onClick={() => setPreviousCursors(previousCursors => previousCursors.slice(0, -1))}
             to={{ search: updateSearchParams(searchParams, { cursor: previousCursor }).toString() }}
           >
-            <ChevronLeft />
+            <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Previous page</span>
           </Link>
         ) : (
-          <p className="p-1 text-gray-300">
-            <ChevronLeft />
+          <p className={cn(CTAClasses, "text-gray-300")}>
+            <ChevronLeft className="h-4 w-4" />
           </p>
         )}
         {nextCursor ? (
           <Link
-            className="p-1"
+            className={cn(CTAClasses)}
             preventScrollReset={preventScrollReset}
             onClick={() => setPreviousCursors(previousCursors => [...previousCursors, currentCursor])}
             to={{ search: updateSearchParams(searchParams, { cursor: nextCursor }).toString() }}
           >
-            <ChevronRight />
+            <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Next page</span>
           </Link>
         ) : (
-          <p className="p-1 text-gray-300">
-            <ChevronRight />
+          <p className={cn(CTAClasses, "text-gray-300")}>
+            <ChevronRight className="h-4 w-4" />
           </p>
         )}
       </div>
