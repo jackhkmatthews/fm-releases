@@ -95,11 +95,20 @@ export default function Index() {
           limit={loaderData.limit}
         />
         <div className={cn(shellPaddingClasses, "border-b border-gray-300 py-4")}>
-          <ul className="flex flex-col gap-10">
-            {loaderData.data.items.map(item => (
-              <Release key={item.id} item={item} />
-            ))}
-          </ul>
+          {loaderData.data.items.length > 0 ? (
+            <ul className="flex flex-col gap-10">
+              {loaderData.data.items.map(item => (
+                <Release key={item.id} item={item} />
+              ))}
+            </ul>
+          ) : (
+            <p className="py-10">
+              Oh no!
+              <br />
+              <br />
+              No releases match these filters. Update your filters to see some releases.
+            </p>
+          )}
         </div>
         <Paginator
           className="border-b border-gray-300 py-4"
