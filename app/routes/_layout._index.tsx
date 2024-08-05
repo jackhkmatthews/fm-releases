@@ -94,9 +94,9 @@ export default function Index() {
           nextCursor={loaderData.data.nextCursor}
           limit={loaderData.limit}
         />
-        <div className={cn(shellPaddingClasses, "border-b border-gray-300 py-4")}>
+        <div className={cn(shellPaddingClasses, "border-b border-gray-300 py-4 lg:py-10")}>
           {loaderData.data.items.length > 0 ? (
-            <ul className="flex flex-col gap-10">
+            <ul className="flex flex-col gap-10 lg:gap-20">
               {loaderData.data.items.map(item => (
                 <Release key={item.id} item={item} />
               ))}

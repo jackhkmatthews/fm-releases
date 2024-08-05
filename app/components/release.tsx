@@ -6,7 +6,7 @@ import { getReleaseUrl, normalizeHttpsAndIpfs } from "~/utils";
 
 export function Release({ item }: { item: Item }) {
   return (
-    <li className="flex flex-col items-start gap-3 py-4">
+    <li className="flex flex-col items-start gap-3 py-4 lg:gap-6">
       <div className="inline-flex items-center gap-2">
         <FMRImage
           height={100}
@@ -33,7 +33,7 @@ export function Release({ item }: { item: Item }) {
           ))}
         </p>
       </div>
-      <p className="break-normal text-gray-600 [overflow-wrap:anywhere]">{item.content.description}</p>
+      <p className="max-w-[50ch] break-normal text-gray-600 [overflow-wrap:anywhere]">{item.content.description}</p>
       <a
         className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-3 py-1 text-gray-200 hover:text-white"
         href={getReleaseUrl(item.publisher.identity.handle, item.releasedBy[0].slug)}
