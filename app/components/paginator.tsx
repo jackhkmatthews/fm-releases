@@ -1,4 +1,4 @@
-import { Form, Link, useSearchParams, useSubmit } from "@remix-run/react";
+import { Form, Link, useLocation, useSubmit } from "@remix-run/react";
 import { ChevronFirst, ChevronLeft, ChevronRight } from "lucide-react";
 import { HTMLAttributes, useEffect, useState } from "react";
 
@@ -38,7 +38,8 @@ export function Paginator({
   limit: string;
   preventScrollReset?: boolean;
 } & HTMLAttributes<HTMLDivElement>) {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
   const [previousCursors, setPreviousCursors] = useState<Array<string | undefined>>([]);
   const [selectLimit, setSelectLimit] = useState(limit);
   const submit = useSubmit();

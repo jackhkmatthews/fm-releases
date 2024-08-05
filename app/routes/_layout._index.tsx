@@ -3,12 +3,12 @@ import {
   Link,
   isRouteErrorResponse,
   useLoaderData,
+  useLocation,
   useNavigation,
   useRouteError,
-  useSearchParams,
   useSubmit,
 } from "@remix-run/react";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { z } from "zod";
 
@@ -18,7 +18,7 @@ import { Release } from "~/components/release";
 import { Sorter } from "~/components/sorter";
 import { getReleases } from "~/data-fetching";
 import { CTAClasses, largeTextClasses, noScrollBar, shellPaddingClasses } from "~/styles";
-import { cn, getCheckedTags } from "~/utils";
+import { cn, getCheckedTags, updateSearchParams } from "~/utils";
 
 const ReleasesUrlSchema = z.object({
   limit: z.coerce.number().min(1).max(100).optional(),
@@ -49,10 +49,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Index() {
   const loaderData = useLoaderData<typeof loader>();
   const navigation = useNavigation();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
   const limitInputRef = useRef<HTMLSelectElement>(null);
   const submit = useSubmit();
   const checkedTags = getCheckedTags(searchParams);
+
+  console.log({ location: location.search, searchParams: searchParams.toString() });
 
   useEffect(() => {
     if (limitInputRef.current) {
@@ -84,17 +87,27 @@ export default function Index() {
 
           {checkedTags.length > 0 &&
             checkedTags.map(tag => (
-              <p key={tag.value} className={cn(CTAClasses, "bg-gray-50 px-2")}>
-                <span>{tag.label}</span>
-              </p>
+              <Link
+                preventScrollReset
+                to={{
+                  search: updateSearchParams(searchParams, {
+                    tag: checkedTags.filter(checkedTag => checkedTag.value !== tag.value).map(tag => tag.value),
+                  }).toString(),
+                }}
+                key={tag.value}
+                className={cn(CTAClasses, "bg-gray-50 px-2")}
+              >
+                {tag.label}
+                <X className="h-4 w-4" />
+              </Link>
             ))}
           <Link
-            to={{ hash: "#filter-menu-open", search: searchParams.toString() }}
+            to={{ hash: "#filter-menu-open", search: location.search }}
             preventScrollReset
             className={cn(CTAClasses, "flex-shrink-0 pl-2")}
           >
             Update filters
-            <Plus className="h-4 w-4 opacity-50" />
+            <Plus className="h-4 w-4" />
           </Link>
         </div>
         <Paginator

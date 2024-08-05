@@ -1,4 +1,4 @@
-import { Form, useSearchParams } from "@remix-run/react";
+import { Form, useLocation } from "@remix-run/react";
 import { RemixFormProps } from "@remix-run/react/dist/components";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "~/components/select";
@@ -27,7 +27,9 @@ export function Sorter({
   sortDirection?: SortDirection;
   onSortChange: React.FormEventHandler<HTMLFormElement>;
 } & RemixFormProps) {
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
   return (
     <Form onChange={onSortChange} {...rest}>
       <label htmlFor="sortDirection">

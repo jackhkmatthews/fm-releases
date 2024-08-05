@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Link, Outlet, useLocation, useSearchParams } from "@remix-run/react";
+import { Link, Outlet, useLocation } from "@remix-run/react";
 import { useEffect, useState } from "react";
 
 import FilterSideMenu from "~/components/filter-side-menu";
@@ -11,7 +11,6 @@ export const meta: MetaFunction = () => {
 };
 export default function Index() {
   const location = useLocation();
-  const [searchParams] = useSearchParams();
 
   // TODO(jack.matthews): Prevents hydration mismatch for sidenav classnames. Maybe a better way?
   const [isClientSide, setIsClientSide] = useState(false);
@@ -29,7 +28,7 @@ export default function Index() {
         )}
       >
         <FilterSideMenu className="flex-grow" />
-        <Link to={{ hash: "#", search: searchParams.toString() }} preventScrollReset replace>
+        <Link to={{ hash: "#", search: location.search }} preventScrollReset replace>
           <span className="sr-only">Close</span>
         </Link>
       </aside>

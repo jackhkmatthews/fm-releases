@@ -16,15 +16,18 @@ export function normalizeHttpsAndIpfs(url: string, baseUrl: string = IMAGE_BASE_
 
 export function updateSearchParams(
   searchParams: string | URLSearchParams,
-  changes: Record<string, string | number | undefined>,
+  changes: Record<string, string | number | undefined | string[]>,
 ) {
   const newSearchParams = typeof searchParams === "string" ? new URLSearchParams(searchParams) : searchParams;
   for (const [key, value] of Object.entries(changes)) {
     if (value === undefined) {
       newSearchParams.delete(key);
-      continue;
+    } else if (Array.isArray(value)) {
+      newSearchParams.delete(key);
+      value.forEach(v => newSearchParams.append(key, v));
+    } else {
+      newSearchParams.set(key, String(value));
     }
-    newSearchParams.set(key, String(value));
   }
   return newSearchParams;
 }
