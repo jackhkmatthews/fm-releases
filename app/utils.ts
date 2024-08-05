@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import { IMAGE_BASE_URL } from "./constants";
+import { IMAGE_BASE_URL, TAGS } from "./constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -27,6 +27,10 @@ export function updateSearchParams(
     newSearchParams.set(key, String(value));
   }
   return newSearchParams;
+}
+
+export function getCheckedTags(searchParams: URLSearchParams) {
+  return (searchParams.getAll("tag") || []).filter(Boolean).map(tag => TAGS.find(t => t.value === tag)!);
 }
 
 export function getReleaseUrl(publisherHandle: string, releaseSlug: string) {

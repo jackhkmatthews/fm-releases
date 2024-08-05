@@ -11,7 +11,11 @@ export const meta: MetaFunction = () => {
 export default function FMRHeader({ className, ...rest }: HTMLAttributes<HTMLDivElement>) {
   return (
     <header
-      className={cn("flex h-16 items-center justify-center border-b border-b-gray-200", shellPaddingClasses, className)}
+      className={cn(
+        "flex h-16 items-center justify-center border-b border-t border-b-gray-200",
+        shellPaddingClasses,
+        className,
+      )}
       {...rest}
     >
       <p className="relative font-mono text-xl">

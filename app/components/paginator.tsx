@@ -1,10 +1,9 @@
-import { Form, Link, useLocation } from "@remix-run/react";
+import { Form, Link, useSearchParams, useSubmit } from "@remix-run/react";
 import { ChevronFirst, ChevronLeft, ChevronRight } from "lucide-react";
 import { HTMLAttributes, useEffect, useState } from "react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "~/components/select";
 import { shellPaddingClasses } from "~/styles";
-import { SortDirection } from "~/types";
 import { cn, updateSearchParams } from "~/utils";
 
 const OPTIONS = [
@@ -29,23 +28,20 @@ const OPTIONS = [
 export function Paginator({
   currentCursor,
   nextCursor,
-  onLimitChange,
   limit,
   preventScrollReset = true,
-  sortDirection,
   className,
   ...rest
 }: {
   currentCursor?: string;
   nextCursor?: string;
   limit: string;
-  onLimitChange: React.FormEventHandler<HTMLFormElement>;
   preventScrollReset?: boolean;
-  sortDirection?: SortDirection;
 } & HTMLAttributes<HTMLDivElement>) {
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [previousCursors, setPreviousCursors] = useState<Array<string | undefined>>([]);
   const [selectLimit, setSelectLimit] = useState(limit);
+  const submit = useSubmit();
 
   // TODO(jack.matthews): not sure about this
   // Need to coordinate two instances of this component with the params in the URL / from the loader
@@ -58,7 +54,12 @@ export function Paginator({
 
   return (
     <div className={cn("flex flex-wrap items-center justify-between gap-2", shellPaddingClasses, className)} {...rest}>
-      <Form onChange={onLimitChange}>
+      <Form
+        preventScrollReset={preventScrollReset}
+        onChange={event => {
+          submit(event.currentTarget, { preventScrollReset: true });
+        }}
+      >
         <label htmlFor="limit">
           <span className="sr-only">Releases per page:</span>
           <Select name="limit" value={selectLimit} onValueChange={setSelectLimit}>
@@ -72,7 +73,11 @@ export function Paginator({
             </SelectContent>
           </Select>
         </label>
-        <input name="sortDirection" type="hidden" value={sortDirection} />
+        {[...searchParams.entries()]
+          .filter(([key]) => key !== "limit")
+          .map(([key, value]) => (
+            <input key={`${key}:${value}`} type="hidden" name={key} value={value} />
+          ))}
       </Form>
       <div className="flex flex-nowrap items-center gap-2">
         {currentCursor ? (
@@ -80,9 +85,7 @@ export function Paginator({
             className="p-1"
             preventScrollReset={preventScrollReset}
             onClick={() => setPreviousCursors([])}
-            to={`${location.pathname}?${updateSearchParams(location.search, {
-              cursor: undefined,
-            }).toString()}`}
+            to={{ search: updateSearchParams(searchParams, { cursor: undefined }).toString() }}
           >
             <ChevronFirst />
             <span className="sr-only">First page</span>
@@ -97,9 +100,7 @@ export function Paginator({
             className="p-1"
             preventScrollReset={preventScrollReset}
             onClick={() => setPreviousCursors(previousCursors => previousCursors.slice(0, -1))}
-            to={`${location.pathname}?${updateSearchParams(location.search, {
-              cursor: previousCursor,
-            }).toString()}`}
+            to={{ search: updateSearchParams(searchParams, { cursor: previousCursor }).toString() }}
           >
             <ChevronLeft />
             <span className="sr-only">Previous page</span>
@@ -114,9 +115,7 @@ export function Paginator({
             className="p-1"
             preventScrollReset={preventScrollReset}
             onClick={() => setPreviousCursors(previousCursors => [...previousCursors, currentCursor])}
-            to={`${location.pathname}?${updateSearchParams(location.search, {
-              cursor: nextCursor,
-            }).toString()}`}
+            to={{ search: updateSearchParams(searchParams, { cursor: nextCursor }).toString() }}
           >
             <ChevronRight />
             <span className="sr-only">Next page</span>

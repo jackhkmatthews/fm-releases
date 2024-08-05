@@ -1,13 +1,5 @@
 import { LoaderFunctionArgs, type MetaFunction, json } from "@remix-run/node";
-import {
-  Link,
-  isRouteErrorResponse,
-  useLoaderData,
-  useLocation,
-  useRouteError,
-  useSearchParams,
-  useSubmit,
-} from "@remix-run/react";
+import { Link, isRouteErrorResponse, useLoaderData, useRouteError, useSearchParams, useSubmit } from "@remix-run/react";
 import { Plus } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { z } from "zod";
@@ -16,10 +8,9 @@ import { Hero } from "~/components/hero";
 import { Paginator } from "~/components/paginator";
 import { Release } from "~/components/release";
 import { Sorter } from "~/components/sorter";
-import { TAGS } from "~/constants";
 import { getReleases } from "~/data-fetching";
 import { largeTextClasses, noScrollBar, queryCTAClasses, shellPaddingClasses } from "~/styles";
-import { cn, updateSearchParams } from "~/utils";
+import { cn, getCheckedTags } from "~/utils";
 
 export const meta: MetaFunction = () => {
   return [{ title: "New Remix App" }, { name: "description", content: "Welcome to Remix!" }];
@@ -35,12 +26,12 @@ const ReleasesUrlSchema = z.object({
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const params = url.searchParams;
-  const tags = params.getAll("tag");
+  const tags = params.getAll("tag").join(",");
   const result = ReleasesUrlSchema.safeParse({
     limit: params.get("limit") || "10",
     cursor: params.get("cursor") || undefined,
     sortDirection: params.get("sortDirection") || "desc",
-    recordTagIn: tags.join(","),
+    recordTagIn: tags || undefined,
   });
   if (!result.success) {
     throw new Response(`Invalid query parameters. ${result.error}`, {
@@ -53,11 +44,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Index() {
   const loaderData = useLoaderData<typeof loader>();
-  const submit = useSubmit();
-  const [, setSearchParams] = useSearchParams();
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
   const limitInputRef = useRef<HTMLSelectElement>(null);
-  const tags = (loaderData.recordTagIn?.split(",") || []).map(tag => TAGS.find(t => t.value === tag)!).filter(Boolean);
+  const submit = useSubmit();
+  const checkedTags = getCheckedTags(searchParams);
 
   useEffect(() => {
     if (limitInputRef.current) {
@@ -83,22 +73,18 @@ export default function Index() {
             className="flex-shrink-0"
             sortDirection={loaderData.sortDirection}
             onSortChange={event => {
-              const formData = new FormData(event.currentTarget);
-              setSearchParams(searchParams => {
-                searchParams.set("sortDirection", formData.get("sortDirection") as string);
-                return searchParams;
-              });
+              submit(event.currentTarget, { preventScrollReset: true });
             }}
           />
 
-          {tags.length > 0 &&
-            tags.map(tag => (
+          {checkedTags.length > 0 &&
+            checkedTags.map(tag => (
               <p key={tag.value} className={cn(queryCTAClasses, "pr-2")}>
                 <span>{tag.label}</span>
               </p>
             ))}
           <Link
-            to={{ search: updateSearchParams(location.search, { filterMenu: "open" }).toString() }}
+            to={{ hash: "#filter-menu-open", search: searchParams.toString() }}
             preventScrollReset
             className={cn(queryCTAClasses, "flex-shrink-0")}
           >
@@ -111,8 +97,6 @@ export default function Index() {
           currentCursor={loaderData.cursor}
           nextCursor={loaderData.data.nextCursor}
           limit={loaderData.limit}
-          onLimitChange={event => submit(event.currentTarget, { preventScrollReset: true })}
-          sortDirection={loaderData.sortDirection}
         />
         <div className={cn(shellPaddingClasses, "border-b border-gray-300 py-4")}>
           <ul className="flex flex-col gap-10">
@@ -127,8 +111,6 @@ export default function Index() {
           currentCursor={loaderData.cursor}
           nextCursor={loaderData.data.nextCursor}
           limit={loaderData.limit}
-          sortDirection={loaderData.sortDirection}
-          onLimitChange={event => submit(event.currentTarget, { preventScrollReset: true })}
         />
       </div>
     </div>

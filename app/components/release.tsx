@@ -15,7 +15,7 @@ export function Release({ item }: { item: Item }) {
           className="inline-block h-8 w-8 rounded-lg border border-gray-200 object-cover"
         />
         <div className="flex flex-col">
-          <p className="break-words break-all text-gray-600">
+          <p className="break-normal text-gray-600 [overflow-wrap:anywhere]">
             Published by <span className="text-black">{item.publisher.identity.name}</span>
           </p>
           <p className="text-sm text-gray-600">
@@ -24,7 +24,7 @@ export function Release({ item }: { item: Item }) {
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <h2 className="break-words text-2xl">{item.content.name}</h2>
+        <h2 className="break-normal text-2xl [overflow-wrap:anywhere]">{item.content.name}</h2>
         <p className="flex flex-wrap gap-1">
           {item.recordTags.map(tag => (
             <span key={tag} className="inline-flex rounded-full border border-gray-600 px-2 text-sm text-gray-600">
@@ -33,7 +33,7 @@ export function Release({ item }: { item: Item }) {
           ))}
         </p>
       </div>
-      <p className="break-words break-all text-gray-600">{item.content.description}</p>
+      <p className="break-normal text-gray-600 [overflow-wrap:anywhere]">{item.content.description}</p>
       <a
         className="inline-flex items-center gap-2 rounded-full bg-gray-800 px-3 py-1 text-gray-200 hover:text-white"
         href={getReleaseUrl(item.publisher.identity.handle, item.releasedBy[0].slug)}

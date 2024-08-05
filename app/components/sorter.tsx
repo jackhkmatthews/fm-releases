@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, useSearchParams } from "@remix-run/react";
 import { RemixFormProps } from "@remix-run/react/dist/components";
 
 import { Select, SelectContent, SelectItem, SelectTrigger } from "~/components/select";
@@ -15,6 +15,10 @@ const SORT_OPTIONS = [
   },
 ];
 
+// NOTE(jack.matthews): this component takes change and direction as props
+// Not sure if in Remix this is the best way to handle this
+// Maybe each component can handle it's own form submission and default from loader data
+// Tension between keeping the data flow close to the route and keeping components reusable
 export function Sorter({
   onSortChange,
   sortDirection,
@@ -23,6 +27,7 @@ export function Sorter({
   sortDirection?: SortDirection;
   onSortChange: React.FormEventHandler<HTMLFormElement>;
 } & RemixFormProps) {
+  const [searchParams] = useSearchParams();
   return (
     <Form onChange={onSortChange} {...rest}>
       <label htmlFor="sortDirection">
@@ -40,6 +45,11 @@ export function Sorter({
           </SelectContent>
         </Select>
       </label>
+      {[...searchParams.entries()]
+        .filter(([key]) => key !== "sortDirection")
+        .map(([key, value]) => (
+          <input key={`${key}:${value}`} type="hidden" name={key} value={value} />
+        ))}
     </Form>
   );
 }
