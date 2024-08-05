@@ -3,7 +3,6 @@ import { X } from "lucide-react";
 import { HtmlHTMLAttributes } from "react";
 
 import { TAGS } from "~/constants";
-import { shellPaddingClasses } from "~/styles";
 import { cn, getCheckedTags } from "~/utils";
 
 export default function FilterSideMenu({ className, ...rest }: HtmlHTMLAttributes<HTMLDivElement>) {
@@ -12,14 +11,14 @@ export default function FilterSideMenu({ className, ...rest }: HtmlHTMLAttribute
 
   return (
     <div className={cn("border-r border-r-gray-300 bg-white", className)} {...rest}>
-      <div className={cn("flex h-16 items-center border-b border-b-gray-300", shellPaddingClasses)}>
+      <div className={cn("flex h-16 items-center border-b border-b-gray-300 px-3")}>
         <h2 className="flex-grow text-center text-2xl">Filters</h2>
         <Link to={{ hash: "#", search: searchParams.toString() }} preventScrollReset className="p-2">
           <span className="sr-only">Close</span>
           <X />
         </Link>
       </div>
-      <Form className={cn(shellPaddingClasses, "flex flex-col gap-8")} preventScrollReset>
+      <Form className={cn("flex flex-col gap-8 px-3 md:px-8")} preventScrollReset>
         <fieldset className="flex flex-col gap-3">
           <legend className="py-3 text-lg">Tags</legend>
 
